@@ -7,6 +7,7 @@ import random
 initState = "1111"
 roundStateList = []
 factor = 0.8
+gameIterations = 100000
 
 def playGame():
     state = initState
@@ -35,17 +36,13 @@ def writeToFile():
 
 
 if __name__ == '__main__':
-    for i in range(100000):
+    for i in range(gameIterations):
+        print('Iteration: ', i,end='\r')
+
         roundStateList = []
-
-        # print('---------playing---------')
+        
         playGame()
-        # print(roundStateList)
-
         roundStateList.reverse()
-        # print('---------feedbacking---------')
         feedBack()
-        # print(stateData)
-        print(i,end='\r')
 
     writeToFile()
