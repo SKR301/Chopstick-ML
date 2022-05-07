@@ -28,16 +28,24 @@ def feedBack():
         val *= 0.8
         isWin = not isWin
         
+def writeToFile():
+    f = open('output','w')
+    f.write(str(stateData))
+    f.close()
 
 
 if __name__ == '__main__':
-    roundStateList = []
+    for i in range(100000):
+        roundStateList = []
 
-    print('---------playing---------')
-    playGame()
-    print(roundStateList)
+        # print('---------playing---------')
+        playGame()
+        # print(roundStateList)
 
-    roundStateList.reverse()
-    print('---------feedbacking---------')
-    feedBack()
-    print(stateData)
+        roundStateList.reverse()
+        # print('---------feedbacking---------')
+        feedBack()
+        # print(stateData)
+        print(i,end='\r')
+
+    writeToFile()
