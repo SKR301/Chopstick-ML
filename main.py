@@ -15,7 +15,6 @@ def playGame():
     while state[:2] != "00":
         state = random.choice(list(stateData[state].items()))[0]
         roundStateList.append(state)
-
     
 def feedBack():
     val = 1
