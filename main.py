@@ -1,6 +1,4 @@
-from os import stat
-
-from sympy import true
+import os
 from data import stateData
 import random
 
@@ -33,7 +31,6 @@ def writeToFile():
     f = open('output','w')
     f.write(str(stateData))
     f.close()
-
 
 if __name__ == '__main__':
     for i in range(gameIterations):
