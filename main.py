@@ -1,4 +1,3 @@
-import os
 from data import stateData
 import random
 
@@ -17,7 +16,7 @@ def playGame():
     
 def feedBack():
     val = 1
-    isWin = true
+    isWin = True
     for a in range(0, len(roundStateList)-1):
         if isWin:
             stateData[roundStateList[a+1]][roundStateList[a]] += val 
