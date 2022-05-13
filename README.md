@@ -2,4 +2,5 @@
 A study on kids game called "Chopstick"
 
 ### Observation 
-- 4444, 4344 states can't be achieved
+- **4444**, **4344** states can't be achieved
+- only **sd100** stops when played with self 
