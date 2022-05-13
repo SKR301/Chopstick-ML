@@ -1,5 +1,6 @@
 from data import stateData
 import random
+import time
 
 initState = "1111"
 roundStateList = []
@@ -33,7 +34,7 @@ def writeToFile(filename):
 
 if __name__ == '__main__':
     try:
-        for i in range(gameIterations):
+        for i in range(gameIterations+1):
             if i % 100 == 0: 
                 print('Iteration: ', i,end='\r')
 
@@ -52,7 +53,6 @@ if __name__ == '__main__':
             if i == 10000:
                 writeToFile('output_10000')
 
-
-        writeToFile('output_interrupt')
     except KeyboardInterrupt:
         print('\nExiting and saving')
+        writeToFile('output_interrupt')
