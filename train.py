@@ -4,7 +4,7 @@ import random
 initState = "1111"
 roundStateList = []
 factor = 0.8
-gameIterations = 100000
+gameIterations = 10000
 
 def playGame():
     state = initState
@@ -26,19 +26,33 @@ def feedBack():
         val *= 0.8
         isWin = not isWin
         
-def writeToFile():
-    f = open('output','w')
+def writeToFile(filename):
+    f = open(filename+'.txt','w')
     f.write(str(stateData))
     f.close()
 
 if __name__ == '__main__':
-    for i in range(gameIterations):
-        print('Iteration: ', i,end='\r')
+    try:
+        for i in range(gameIterations):
+            if i % 100 == 0: 
+                print('Iteration: ', i,end='\r')
 
-        roundStateList = []
-        
-        playGame()
-        roundStateList.reverse()
-        feedBack()
+            roundStateList = []
+            
+            playGame()
+            roundStateList.reverse()
+            feedBack()
 
-    writeToFile()
+            if i == 100:
+                writeToFile('output_100')
+
+            if i == 1000:
+                writeToFile('output_1000')
+
+            if i == 10000:
+                writeToFile('output_10000')
+
+
+        writeToFile('output_interrupt')
+    except KeyboardInterrupt:
+        print('\nExiting and saving')
