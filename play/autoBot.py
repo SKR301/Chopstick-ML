@@ -2,7 +2,7 @@
 This file will be used to fight two trained data models against each other and generate win percentage for both to see how much better one is. MAY THE BEST MODEL WIN.
 Thesis: Model with more game play should win more
 Observation:
-- 100 and 1000 will goto loop!
+- 100 and 1000 will goto loop
 - Maybe models give same graph
 """
 

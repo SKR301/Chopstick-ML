@@ -2,11 +2,12 @@
 A study on kids game called "Chopstick"
 
 ### Studies
-1. generate data:  
-2. self-Fight
-3. Fight with each other
+1. Generate data:  
+2. Model Fight
+3. Model Comparison
 
 ### Observation 
 1. **4444**, **4344** states can't be achieved
-2. only **sd100** stops when played with self 
-3. All went to infinite loop when played against each other
+2. **100** and **1000** went to loop
+2. Rest all stopped after 12 iterations
+3. Models gain knowledge only after **10000** games
