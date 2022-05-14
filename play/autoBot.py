@@ -24,13 +24,13 @@ sd1000Won = 0
 while state[:2] != '00':
     possibleMoves = {}
     if i % 2 == 0:
-        possibleMoves = sd1000000[state]
+        possibleMoves = sd100[state]
         sortedMoves = dict(sorted(possibleMoves.items(), key=lambda item: item[1]))
         state = list(sortedMoves.keys())[-1]
         i += 1
         print('1:>', state)
     else:
-        possibleMoves = sd10000000[state]
+        possibleMoves = sd1000[state]
         sortedMoves = dict(sorted(possibleMoves.items(), key=lambda item: item[1]))
         state = list(sortedMoves.keys())[-1]
         i += 1
