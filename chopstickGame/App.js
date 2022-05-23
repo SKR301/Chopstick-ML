@@ -31,12 +31,12 @@ export default function App() {
 		if(user != turn && isTransfering == 1){
 			if(user == 'c'){
 				let fingers = compFingers;
-				fingers[hand] += currFingerCount;
+				fingers[hand] = (fingers[hand] + currFingerCount) % 5;
 				setCompFingers(fingers);
 			}
 			if(user == 'h'){
 				let fingers = humanFingers;
-				fingers[hand] += currFingerCount;
+				fingers[hand] = (fingers[hand] + currFingerCount) % 5;
 				setHumanFingers(fingers);
 			}
 			setCurrFingerCount(0);
@@ -45,22 +45,30 @@ export default function App() {
 		}
 	}
 
+	const isDisable = (toComp, val) => {
+		if((turn == toComp && isTransfering == 0)||(val == 0)){
+			return true;
+		}
+
+		return false;
+	}
+
 	return (
 		<View style={styles.container}>
 			<View style={styles.handContainer}>
-				<TouchableOpacity style={styles.fingers} onPress={() => clicked('c',0)}>
+				<TouchableOpacity style={styles.fingers} onPress={() => clicked('c',0)} disabled={(isDisable('h',compFingers[0]))}>
 					<Text style={styles.fingerText}>{compFingers[0]}</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.fingers} onPress={() => clicked('c',1)}>
+				<TouchableOpacity style={styles.fingers} onPress={() => clicked('c',1)} disabled={(isDisable('h',compFingers[1]))}>
 					<Text style={styles.fingerText}>{compFingers[1]}</Text>
 				</TouchableOpacity>
 			</View>
 
 			<View style={styles.handContainer}>
-				<TouchableOpacity style={styles.fingers} onPress={() => clicked('h',0)}>
+				<TouchableOpacity style={styles.fingers} onPress={() => clicked('h',0)} disabled={(isDisable('c',humanFingers[0]))}>
 					<Text style={styles.fingerText}>{humanFingers[0]}</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.fingers} onPress={() => clicked('h',1)}>
+				<TouchableOpacity style={styles.fingers} onPress={() => clicked('h',1)} disabled={(isDisable('c',humanFingers[1]))}>
 					<Text style={styles.fingerText}>{humanFingers[1]}</Text>
 				</TouchableOpacity>
 			</View>
