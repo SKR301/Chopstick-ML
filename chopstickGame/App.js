@@ -4,8 +4,9 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 export default function App() {
 	const [compFingers, setCompFingers] = useState([1,1]);
 	const [humanFingers, setHumanFingers] = useState([1,1]);
-	const [turn, setTurn] = useState('c');
+	const [turn, setTurn] = useState('h');
 	const [currFingerCount, setCurrFingerCount] = useState(0);
+	const [isTransfering, setIsTransfering] = useState(0);
 
 	const changeTurn = () => {
 		if(turn == 'c'){
@@ -15,26 +16,51 @@ export default function App() {
 		}
 	}
 
-	const clicked = () => {
-		console.log('selected');
+	const clicked = (user, hand) => {
+		if(user == turn && isTransfering == 0){
+			if(user == 'c'){
+				let fingers = compFingers[hand];
+				setCurrFingerCount(fingers);
+			}
+			if(user == 'h'){
+				let fingers = humanFingers[hand];
+				setCurrFingerCount(fingers);
+			}
+			setIsTransfering(1);
+		}
+		if(user != turn && isTransfering == 1){
+			if(user == 'c'){
+				let fingers = compFingers;
+				fingers[hand] += currFingerCount;
+				setCompFingers(fingers);
+			}
+			if(user == 'h'){
+				let fingers = humanFingers;
+				fingers[hand] += currFingerCount;
+				setHumanFingers(fingers);
+			}
+			setCurrFingerCount(0);
+			setIsTransfering(0);
+			changeTurn();
+		}
 	}
 
 	return (
 		<View style={styles.container}>
 			<View style={styles.handContainer}>
-				<TouchableOpacity style={styles.fingers} onPress={clicked}>
+				<TouchableOpacity style={styles.fingers} onPress={() => clicked('c',0)}>
 					<Text style={styles.fingerText}>{compFingers[0]}</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.fingers} onPress={clicked}>
+				<TouchableOpacity style={styles.fingers} onPress={() => clicked('c',1)}>
 					<Text style={styles.fingerText}>{compFingers[1]}</Text>
 				</TouchableOpacity>
 			</View>
 
 			<View style={styles.handContainer}>
-				<TouchableOpacity style={styles.fingers} onPress={clicked}>
+				<TouchableOpacity style={styles.fingers} onPress={() => clicked('h',0)}>
 					<Text style={styles.fingerText}>{humanFingers[0]}</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.fingers} onPress={clicked}>
+				<TouchableOpacity style={styles.fingers} onPress={() => clicked('h',1)}>
 					<Text style={styles.fingerText}>{humanFingers[1]}</Text>
 				</TouchableOpacity>
 			</View>
