@@ -4,32 +4,58 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 export default function App() {
 	const [state, setState] = useState('1111');
 	const [fingers, setFingers] = useState([1,1,1,1]);
-	const [turn, setTurn] = useState('c');
-	const [selHand, setSelHand] = useState(0);
+	const [turn, setTurn] = useState('h');
+	const [selHand, setSelHand] = useState(-1);
 	const [selFingerCount, setSelFingerCount] = useState(0);
 
 	const state2fingers = () => {
 		let stateCharArray = state.split('');
 		let stateIntArray = stateCharArray.map((ch) => parseInt(ch));
 		setFingers(stateIntArray);
+	}
+	
+	const changeTurn = () => {
+		(turn == 'h')? setTurn('c'): setTurn('h');
+	}
 
-		console.log(fingers);
+	const collect = (hand) => {
+		setSelHand(hand);
+		setSelFingerCount(fingers[hand]);
+	}
+
+	const genState = (hand, val) => {
+		switch(hand){
+			case 0: return val + '' + fingers[1] + '' + fingers[2] + '' + fingers[3]; break;
+			case 1: return fingers[1] + '' + val + '' + fingers[2] + '' + fingers[3]; break;
+			case 2: return fingers[1] + '' + fingers[1] + '' + val + '' + fingers[3]; break;
+			case 3: return fingers[1] + '' + fingers[1] + '' + fingers[2] + '' + val; break;
+		}
+	}
+
+	const transfer = (hand) => {
+		fingers[hand] += selFingerCount;
+		fingers[hand] %= 5;
+		setState(fingers.join(''));
+		changeTurn();
 	}
 
 	useEffect(() => {
 		state2fingers();
-	}, [state]);
+		// playComputerTurn();
+	}, [state, selHand]);
 
 	return (
 		<View style={containers.component}>
 			<View style={[containers.hands, containers.topHand]}>
 				<TouchableOpacity
-					style={hands.hand}
+					style={(selHand == 0)? [hands.hand, hands.handSelected]: hands.hand}
+					onPress={(turn == 'h')? ()=> transfer(0): ()=> console.log('!')}
 				>
 					<Text style={hands.fingers}>{fingers[0]}</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
-					style={hands.hand}
+					style={(selHand == 1)? [hands.hand, hands.handSelected]: hands.hand}
+					onPress={(turn == 'h')? ()=> transfer(1): ()=> console.log('@')}
 				>
 					<Text style={hands.fingers}>{fingers[1]}</Text>
 				</TouchableOpacity>
@@ -37,12 +63,14 @@ export default function App() {
 			
 			<View style={[containers.hands, containers.bottomHand]}>
 				<TouchableOpacity
-					style={hands.hand}
+					style={(selHand == 2)? [hands.hand, hands.handSelected]: hands.hand}
+					onPress={(turn == 'h')? ()=> collect(2): ()=>console.log('#')}
 				>
 					<Text style={hands.fingers}>{fingers[2]}</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
-					style={hands.hand}
+					style={(selHand == 3)? [hands.hand, hands.handSelected]: hands.hand}
+					onPress={(turn == 'h')? ()=> collect(3): ()=>console.log('$')}
 				>
 					<Text style={hands.fingers}>{fingers[3]}</Text>
 				</TouchableOpacity>
@@ -77,14 +105,17 @@ const hands = StyleSheet.create({
 		height: buttonSize,
 		width: buttonSize,
 		borderRadius: buttonSize,
-		borderColor: 'black',
-		borderWidth: 2,
+		backgroundColor: '#ddd',
 		justifyContent: 'center',
 		alignItems: 'center',
 		margin: 50,
 	},
 	fingers: {
 		fontSize: buttonSize/5,
+	},
+	handSelected: {
+		borderColor: 'black',
+		borderWidth: 5,
 	}
 });
 
