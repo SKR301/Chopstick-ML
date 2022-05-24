@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { stateData100 } from './assets/modelCollection';
 
 export default function App() {
 	const [state, setState] = useState('1111');
@@ -23,15 +24,6 @@ export default function App() {
 		setSelFingerCount(fingers[hand]);
 	}
 
-	const genState = (hand, val) => {
-		switch(hand){
-			case 0: return val + '' + fingers[1] + '' + fingers[2] + '' + fingers[3]; break;
-			case 1: return fingers[1] + '' + val + '' + fingers[2] + '' + fingers[3]; break;
-			case 2: return fingers[1] + '' + fingers[1] + '' + val + '' + fingers[3]; break;
-			case 3: return fingers[1] + '' + fingers[1] + '' + fingers[2] + '' + val; break;
-		}
-	}
-
 	const transfer = (hand) => {
 		fingers[hand] += selFingerCount;
 		fingers[hand] %= 5;
@@ -40,6 +32,7 @@ export default function App() {
 	}
 
 	useEffect(() => {
+		console.log(stateData100);
 		state2fingers();
 		// playComputerTurn();
 	}, [state, selHand]);
