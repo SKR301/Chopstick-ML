@@ -25,16 +25,49 @@ export default function App() {
 	}
 
 	const transfer = (hand) => {
-		fingers[hand] += selFingerCount;
-		fingers[hand] %= 5;
-		setState(fingers.join(''));
+		if(selFingerCount != 0){
+			fingers[hand] += selFingerCount;
+			fingers[hand] %= 5;
+			setState(fingers.join(''));
+			setSelFingerCount(0);
+			changeTurn();
+			setSelHand(-1);
+		}
+	}
+
+	const sortDict = (dict) => {
+		let sorted = Object.keys(dict).map(function(key) {
+			return [key, dict[key]];
+		});
+		  
+		sorted.sort(function(first, second) {
+			return second[1] - first[1];
+		});
+
+		return sorted;
+	}
+
+	const playComputerTurn = () => {
+		let optimalState01 = state.substring(0,2);
+		let optimalState23 = state.substring(2,4);
+		let optimalState = optimalState01.split('').sort().reverse().join('') + optimalState23.split('').sort().reverse().join('');
+
+		let nextState = sortDict(stateData100[optimalState])[0][0];
+		let properState = nextState.substring(2,4)+nextState.substring(0,2);
+		setTimeout(()=>{
+			setState(properState);
+		},500); 
 		changeTurn();
 	}
 
 	useEffect(() => {
-		console.log(stateData100);
 		state2fingers();
-		// playComputerTurn();
+		if(turn == 'c'){
+			playComputerTurn();
+		}
+		if(state.substring(0,2) == '00' || state.substring(2,4) == '00'){
+			alert('Completed');
+		}
 	}, [state, selHand]);
 
 	return (
@@ -42,13 +75,15 @@ export default function App() {
 			<View style={[containers.hands, containers.topHand]}>
 				<TouchableOpacity
 					style={(selHand == 0)? [hands.hand, hands.handSelected]: hands.hand}
-					onPress={(turn == 'h')? ()=> transfer(0): ()=> console.log('!')}
+					onPress={(turn == 'h')? ()=> transfer(0): ()=> console.log('first')}
+					disabled={(fingers[0] == 0)? true: false}
 				>
 					<Text style={hands.fingers}>{fingers[0]}</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={(selHand == 1)? [hands.hand, hands.handSelected]: hands.hand}
-					onPress={(turn == 'h')? ()=> transfer(1): ()=> console.log('@')}
+					onPress={(turn == 'h')? ()=> transfer(1): ()=> console.log('second')}
+					disabled={(fingers[0] == 0)? true: false}
 				>
 					<Text style={hands.fingers}>{fingers[1]}</Text>
 				</TouchableOpacity>
@@ -57,13 +92,15 @@ export default function App() {
 			<View style={[containers.hands, containers.bottomHand]}>
 				<TouchableOpacity
 					style={(selHand == 2)? [hands.hand, hands.handSelected]: hands.hand}
-					onPress={(turn == 'h')? ()=> collect(2): ()=>console.log('#')}
+					onPress={(turn == 'h')? ()=> collect(2): ()=>console.log('third')}
+					disabled={(fingers[0] == 0)? true: false}
 				>
 					<Text style={hands.fingers}>{fingers[2]}</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={(selHand == 3)? [hands.hand, hands.handSelected]: hands.hand}
-					onPress={(turn == 'h')? ()=> collect(3): ()=>console.log('$')}
+					onPress={(turn == 'h')? ()=> collect(3): ()=>console.log('forth')}
+					disabled={(fingers[0] == 0)? true: false}
 				>
 					<Text style={hands.fingers}>{fingers[3]}</Text>
 				</TouchableOpacity>
