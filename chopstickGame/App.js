@@ -1,102 +1,90 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function App() {
-	const [compFingers, setCompFingers] = useState([1,1]);
-	const [humanFingers, setHumanFingers] = useState([1,1]);
-	const [turn, setTurn] = useState('h');
-	const [currFingerCount, setCurrFingerCount] = useState(0);
-	const [isTransfering, setIsTransfering] = useState(0);
+	const [state, setState] = useState('1111');
+	const [fingers, setFingers] = useState([1,1,1,1]);
+	const [turn, setTurn] = useState('c');
+	const [selHand, setSelHand] = useState(0);
+	const [selFingerCount, setSelFingerCount] = useState(0);
 
-	const changeTurn = () => {
-		if(turn == 'c'){
-			setTurn('h');
-		} else {
-			setTurn('c');
-		}
+	const state2fingers = () => {
+		let stateCharArray = state.split('');
+		let stateIntArray = stateCharArray.map((ch) => parseInt(ch));
+		setFingers(stateIntArray);
+
+		console.log(fingers);
 	}
 
-	const clicked = (user, hand) => {
-		if(user == turn && isTransfering == 0){
-			if(user == 'c'){
-				let fingers = compFingers[hand];
-				setCurrFingerCount(fingers);
-			}
-			if(user == 'h'){
-				let fingers = humanFingers[hand];
-				setCurrFingerCount(fingers);
-			}
-			setIsTransfering(1);
-		}
-		if(user != turn && isTransfering == 1){
-			if(user == 'c'){
-				let fingers = compFingers;
-				fingers[hand] = (fingers[hand] + currFingerCount) % 5;
-				setCompFingers(fingers);
-			}
-			if(user == 'h'){
-				let fingers = humanFingers;
-				fingers[hand] = (fingers[hand] + currFingerCount) % 5;
-				setHumanFingers(fingers);
-			}
-			setCurrFingerCount(0);
-			setIsTransfering(0);
-			changeTurn();
-		}
-	}
-
-	const isDisable = (toComp, val) => {
-		if((turn == toComp && isTransfering == 0)||(val == 0)){
-			return true;
-		}
-
-		return false;
-	}
+	useEffect(() => {
+		state2fingers();
+	}, [state]);
 
 	return (
-		<View style={styles.container}>
-			<View style={styles.handContainer}>
-				<TouchableOpacity style={styles.fingers} onPress={() => clicked('c',0)} disabled={(isDisable('h',compFingers[0]))}>
-					<Text style={styles.fingerText}>{compFingers[0]}</Text>
+		<View style={containers.component}>
+			<View style={[containers.hands, containers.topHand]}>
+				<TouchableOpacity
+					style={hands.hand}
+				>
+					<Text style={hands.fingers}>{fingers[0]}</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.fingers} onPress={() => clicked('c',1)} disabled={(isDisable('h',compFingers[1]))}>
-					<Text style={styles.fingerText}>{compFingers[1]}</Text>
+				<TouchableOpacity
+					style={hands.hand}
+				>
+					<Text style={hands.fingers}>{fingers[1]}</Text>
 				</TouchableOpacity>
 			</View>
-
-			<View style={styles.handContainer}>
-				<TouchableOpacity style={styles.fingers} onPress={() => clicked('h',0)} disabled={(isDisable('c',humanFingers[0]))}>
-					<Text style={styles.fingerText}>{humanFingers[0]}</Text>
+			
+			<View style={[containers.hands, containers.bottomHand]}>
+				<TouchableOpacity
+					style={hands.hand}
+				>
+					<Text style={hands.fingers}>{fingers[2]}</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.fingers} onPress={() => clicked('h',1)} disabled={(isDisable('c',humanFingers[1]))}>
-					<Text style={styles.fingerText}>{humanFingers[1]}</Text>
+				<TouchableOpacity
+					style={hands.hand}
+				>
+					<Text style={hands.fingers}>{fingers[3]}</Text>
 				</TouchableOpacity>
 			</View>
 		</View>
 	);
 }
 
-const styles = StyleSheet.create({
-	container: {
-		backgroundColor: '#444',
+const buttonSize = 200;
+
+const containers = StyleSheet.create({
+	component: {
+		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
-	handContainer: {
+	hands: {
 		flex: 1,
-		flexDirection: 'row'
+		flexDirection: 'row',
+		margin: 50,
+	},
+	topHand: {
+		alignItems: 'flex-end'
+	},
+	bottomHand: {
+		alignItems: 'flex-start'
+	}
+});
+
+const hands = StyleSheet.create({
+	hand: {
+		height: buttonSize,
+		width: buttonSize,
+		borderRadius: buttonSize,
+		borderColor: 'black',
+		borderWidth: 2,
+		justifyContent: 'center',
+		alignItems: 'center',
+		margin: 50,
 	},
 	fingers: {
-		margin: 10,
-		padding: 10,
-		width: 250,
-		height: 100,
-		textAlign: 'center',
-		justifyContent: 'center',
-		backgroundColor: '#aaa'
-	},
-	fingerText: {
-		fontSize: 20
+		fontSize: buttonSize/5,
 	}
 });
 
