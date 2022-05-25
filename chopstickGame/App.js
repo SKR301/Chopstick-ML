@@ -8,6 +8,12 @@ export default function App() {
 	const [turn, setTurn] = useState('h');
 	const [selHand, setSelHand] = useState(-1);
 	const [selFingerCount, setSelFingerCount] = useState(0);
+	const [distributedStates, setDistributedStates] = useState([]);
+
+	const resetRound = () => {
+		setSelHand(-1);
+		setSelFingerCount(0);
+	}
 
 	const state2fingers = () => {
 		let stateCharArray = state.split('');
@@ -20,18 +26,35 @@ export default function App() {
 	}
 
 	const collect = (hand) => {
+		console.log('collect')
 		setSelHand(hand);
 		setSelFingerCount(fingers[hand]);
 	}
 
 	const transfer = (hand) => {
+		console.log('transfer')
 		if(selFingerCount != 0){
 			fingers[hand] += selFingerCount;
 			fingers[hand] %= 5;
 			setState(fingers.join(''));
-			setSelFingerCount(0);
 			changeTurn();
-			setSelHand(-1);
+			resetRound();
+		}
+	}
+
+	const distribute = () => {
+		let total = fingers[2] + fingers[3];
+		for(let a=0; a<=total/2; a++){
+			console.log(a, total-a);
+		}
+	}
+
+	const clicked = (hand) => {
+		if(turn == 'h' && selFingerCount == 0 && selHand == -1){
+			collect(hand);
+		}
+		if(turn == 'h' && selFingerCount != 0 && selHand != -1){
+			distribute();
 		}
 	}
 
@@ -50,6 +73,8 @@ export default function App() {
 	const playComputerTurn = () => {
 		let optimalState01 = state.substring(0,2);
 		let optimalState23 = state.substring(2,4);
+
+		// Need to sort but maintain order 
 		let optimalState = optimalState01.split('').sort().reverse().join('') + optimalState23.split('').sort().reverse().join('');
 
 		let nextState = sortDict(stateData100[optimalState])[0][0];
@@ -75,14 +100,14 @@ export default function App() {
 			<View style={[containers.hands, containers.topHand]}>
 				<TouchableOpacity
 					style={(selHand == 0)? [hands.hand, hands.handSelected]: hands.hand}
-					onPress={(turn == 'h')? ()=> transfer(0): ()=> console.log('first')}
+					onPress={(turn == 'h')? ()=> transfer(0): ()=> console.log('invalid press on 1')}
 					disabled={(fingers[0] == 0)? true: false}
 				>
 					<Text style={hands.fingers}>{fingers[0]}</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={(selHand == 1)? [hands.hand, hands.handSelected]: hands.hand}
-					onPress={(turn == 'h')? ()=> transfer(1): ()=> console.log('second')}
+					onPress={(turn == 'h')? ()=> transfer(1): ()=> console.log('invalid press on 2')}
 					disabled={(fingers[0] == 0)? true: false}
 				>
 					<Text style={hands.fingers}>{fingers[1]}</Text>
@@ -92,19 +117,29 @@ export default function App() {
 			<View style={[containers.hands, containers.bottomHand]}>
 				<TouchableOpacity
 					style={(selHand == 2)? [hands.hand, hands.handSelected]: hands.hand}
-					onPress={(turn == 'h')? ()=> collect(2): ()=>console.log('third')}
+					// onPress={(turn == 'h' && selFingerCount == 0)? ()=> collect(2): (selHand != 2)? ()=>distribute(): ()=> console.log('invalid press on 2')}
+					onPress={()=> clicked(2)}
 					disabled={(fingers[0] == 0)? true: false}
 				>
 					<Text style={hands.fingers}>{fingers[2]}</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={(selHand == 3)? [hands.hand, hands.handSelected]: hands.hand}
-					onPress={(turn == 'h')? ()=> collect(3): ()=>console.log('forth')}
+					// onPress={(turn == 'h' && selFingerCount == 0)? ()=> collect(3): (selHand != 3)? ()=>distribute(): ()=> console.log('invalid press on 3')}
+					onPress={()=> clicked(3)}
 					disabled={(fingers[0] == 0)? true: false}
 				>
 					<Text style={hands.fingers}>{fingers[3]}</Text>
 				</TouchableOpacity>
 			</View>
+
+			<TouchableOpacity 
+				onPress={()=> resetRound()}
+			>
+				<Text>Clear Selection</Text>
+			</TouchableOpacity>
+
+			{/* {SHOW DISTRIBUTE POSSIBLITY HERE} */}
 		</View>
 	);
 }
