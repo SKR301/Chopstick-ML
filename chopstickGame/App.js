@@ -26,13 +26,11 @@ export default function App() {
 	}
 
 	const collect = (hand) => {
-		console.log('collect')
 		setSelHand(hand);
 		setSelFingerCount(fingers[hand]);
 	}
 
 	const transfer = (hand) => {
-		console.log('transfer')
 		if(selFingerCount != 0){
 			fingers[hand] += selFingerCount;
 			fingers[hand] %= 5;
@@ -44,9 +42,12 @@ export default function App() {
 
 	const distribute = () => {
 		let total = fingers[2] + fingers[3];
+		let possibleDist = [];
 		for(let a=0; a<=total/2; a++){
-			console.log(a, total-a);
+			possibleDist.push([a, total-a]);
 		}
+
+		setDistributedStates(possibleDist);
 	}
 
 	const clicked = (hand) => {
@@ -93,7 +94,12 @@ export default function App() {
 		if(state.substring(0,2) == '00' || state.substring(2,4) == '00'){
 			alert('Completed');
 		}
-	}, [state, selHand]);
+	}, [state, selHand, distributedStates]);
+
+	const distributedRender = [];
+	for (let distributedState of distributedStates) {
+		distributedRender.push(<Text key={distributedState[0]}>{distributedState[0]+''+distributedState[1]}</Text>);  
+	}
 
 	return (
 		<View style={containers.component}>
@@ -103,43 +109,42 @@ export default function App() {
 					onPress={(turn == 'h')? ()=> transfer(0): ()=> console.log('invalid press on 1')}
 					disabled={(fingers[0] == 0)? true: false}
 				>
-					<Text style={hands.fingers}>{fingers[0]}</Text>
+					<Text style={text.fingers}>{fingers[0]}</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={(selHand == 1)? [hands.hand, hands.handSelected]: hands.hand}
 					onPress={(turn == 'h')? ()=> transfer(1): ()=> console.log('invalid press on 2')}
 					disabled={(fingers[0] == 0)? true: false}
 				>
-					<Text style={hands.fingers}>{fingers[1]}</Text>
+					<Text style={text.fingers}>{fingers[1]}</Text>
 				</TouchableOpacity>
 			</View>
+
+		<TouchableOpacity 
+			style={util.resetButton}
+			onPress={()=> resetRound()}
+		>
+			<Text style={text.resetButton}>Clear Selection</Text>
+		</TouchableOpacity>
 			
 			<View style={[containers.hands, containers.bottomHand]}>
 				<TouchableOpacity
 					style={(selHand == 2)? [hands.hand, hands.handSelected]: hands.hand}
-					// onPress={(turn == 'h' && selFingerCount == 0)? ()=> collect(2): (selHand != 2)? ()=>distribute(): ()=> console.log('invalid press on 2')}
 					onPress={()=> clicked(2)}
 					disabled={(fingers[0] == 0)? true: false}
 				>
-					<Text style={hands.fingers}>{fingers[2]}</Text>
+					<Text style={text.fingers}>{fingers[2]}</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={(selHand == 3)? [hands.hand, hands.handSelected]: hands.hand}
-					// onPress={(turn == 'h' && selFingerCount == 0)? ()=> collect(3): (selHand != 3)? ()=>distribute(): ()=> console.log('invalid press on 3')}
 					onPress={()=> clicked(3)}
 					disabled={(fingers[0] == 0)? true: false}
 				>
-					<Text style={hands.fingers}>{fingers[3]}</Text>
+					<Text style={text.fingers}>{fingers[3]}</Text>
 				</TouchableOpacity>
 			</View>
 
-			<TouchableOpacity 
-				onPress={()=> resetRound()}
-			>
-				<Text>Clear Selection</Text>
-			</TouchableOpacity>
-
-			{/* {SHOW DISTRIBUTE POSSIBLITY HERE} */}
+			{distributedRender}
 		</View>
 	);
 }
@@ -175,13 +180,28 @@ const hands = StyleSheet.create({
 		alignItems: 'center',
 		margin: 50,
 	},
-	fingers: {
-		fontSize: buttonSize/5,
-	},
 	handSelected: {
 		borderColor: 'black',
 		borderWidth: 5,
 	}
+});
+
+const util = StyleSheet.create({
+	resetButton: {
+		padding: 20,
+		borderRadius: 10,
+		backgroundColor: '#555',
+	}
+});
+
+const text = StyleSheet.create({
+	resetButton: {
+		fontSize: 15,
+		color: '#fff',
+	},	
+	fingers: {
+		fontSize: buttonSize/5,
+	},
 });
 
 
