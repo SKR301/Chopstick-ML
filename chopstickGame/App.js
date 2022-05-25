@@ -13,6 +13,7 @@ export default function App() {
 	const resetRound = () => {
 		setSelHand(-1);
 		setSelFingerCount(0);
+		setDistributedStates([]);
 	}
 
 	const state2fingers = () => {
@@ -44,13 +45,20 @@ export default function App() {
 		let total = fingers[2] + fingers[3];
 		let possibleDist = [];
 		for(let a=0; a<=total/2; a++){
-			possibleDist.push([a, total-a]);
+			if(total-a != 5 && a != 5){
+				possibleDist.push([a, total-a]);
+			}
 		}
+
+		possibleDist = possibleDist.filter((val)=> {
+			return (val[0] != fingers[2] || val[1] != fingers[3])&&(val[1] != fingers[2] || val[0] != fingers[3]);
+		})
 
 		setDistributedStates(possibleDist);
 	}
 
 	const clicked = (hand) => {
+		setDistributedStates([]);
 		if(turn == 'h' && selFingerCount == 0 && selHand == -1){
 			collect(hand);
 		}
@@ -86,19 +94,40 @@ export default function App() {
 		changeTurn();
 	}
 
+	const clickDist = (val1, val2) => {
+		setDistributedStates([]);
+		fingers[2] = val1;
+		fingers[3] = val2;
+
+		setState(state.substring(0,2)+val1+val2);
+		resetRound();
+		changeTurn();
+	}
+
 	useEffect(() => {
 		state2fingers();
-		if(turn == 'c'){
-			playComputerTurn();
-		}
 		if(state.substring(0,2) == '00' || state.substring(2,4) == '00'){
 			alert('Completed');
+		}else{
+			if(turn == 'c'){
+				playComputerTurn();
+			}
 		}
 	}, [state, selHand, distributedStates]);
 
 	const distributedRender = [];
 	for (let distributedState of distributedStates) {
-		distributedRender.push(<Text key={distributedState[0]}>{distributedState[0]+''+distributedState[1]}</Text>);  
+		distributedRender.push(
+			<TouchableOpacity
+				style={util.distButton}
+				key={distributedState[0]}
+				onPress={()=> clickDist(distributedState[0], distributedState[1])}
+			>
+				<Text style={text.distButton}>
+					{distributedState[0]+''+distributedState[1]}
+				</Text>
+			</TouchableOpacity>
+		);  
 	}
 
 	return (
@@ -144,7 +173,9 @@ export default function App() {
 				</TouchableOpacity>
 			</View>
 
-			{distributedRender}
+			<View style={containers.distribute}>
+				{distributedRender}
+			</View>
 		</View>
 	);
 }
@@ -158,7 +189,7 @@ const containers = StyleSheet.create({
 		alignItems: 'center',
 	},
 	hands: {
-		flex: 1,
+		flex: 4.5,
 		flexDirection: 'row',
 		margin: 50,
 	},
@@ -167,6 +198,10 @@ const containers = StyleSheet.create({
 	},
 	bottomHand: {
 		alignItems: 'flex-start'
+	},
+	distribute: {
+		flex: 1,
+		flexDirection: 'row',
 	}
 });
 
@@ -191,6 +226,14 @@ const util = StyleSheet.create({
 		padding: 20,
 		borderRadius: 10,
 		backgroundColor: '#555',
+	},
+	distButton: {
+		borderColor: '#aaa',
+		borderWidth: 2,
+		borderRadius: 5,
+		justifyContent: 'center',
+		alignItems: 'center',
+		margin: 10,
 	}
 });
 
@@ -202,6 +245,11 @@ const text = StyleSheet.create({
 	fingers: {
 		fontSize: buttonSize/5,
 	},
+	distButton: {
+		fontSize: 30,
+		paddingHorizontal: 50,
+		paddingVertical: 30,
+	}
 });
 
 
