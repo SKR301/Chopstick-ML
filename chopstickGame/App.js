@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, Dimensions  } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Dimensions } from 'react-native';
 import { stateData100 } from './assets/modelCollection';
 import { stateData10000 } from './assets/modelCollection';
 import { stateData10000000 } from './assets/modelCollection';
@@ -145,6 +145,7 @@ export default function App() {
 			return (
 				<View style={containers.gameOver}>
 					<Text style={text.gameOver}>GAME OVER</Text>
+					<Text style={text.refreshNotify}>Refresh to start again</Text>
 				</View>
 			);
 		}
@@ -278,8 +279,13 @@ const text = StyleSheet.create({
 		paddingVertical: 30,
 	},
 	gameOver: {
-		padding: 50,
+		paddingTop: 50,
 		fontSize: 50,
+		color: '#fff'
+	},
+	refreshNotify: {
+		paddingBottom: 50,
+		fontSize: 20,
 		color: '#fff'
 	}
 });
