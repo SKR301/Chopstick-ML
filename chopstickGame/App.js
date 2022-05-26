@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Dimensions  } from 'react-native';
 import { stateData100 } from './assets/modelCollection';
 import { stateData10000 } from './assets/modelCollection';
 import { stateData10000000 } from './assets/modelCollection';
@@ -140,9 +140,20 @@ export default function App() {
 		);  
 	}
 
+	const gameOver = () => {
+		if(state.substring(0,2) != '00' && state.substring(2,4) != '00'){
+			return (
+				<View style={containers.gameOver}>
+					<Text style={text.gameOver}>GAME OVER</Text>
+				</View>
+			);
+		}
+	}
+
 	return (
-		// render game completion 
 		<View style={containers.component}>
+			{gameOver()}
+
 			<View style={[containers.hands, containers.topHand]}>
 				<TouchableOpacity
 					style={(selHand == 0)? [hands.hand, hands.handSelected]: hands.hand}
@@ -213,6 +224,11 @@ const containers = StyleSheet.create({
 	distribute: {
 		flex: 1,
 		flexDirection: 'row',
+	},
+	gameOver: {
+		backgroundColor: '#333',
+		width: Dimensions.get('window').width,
+		alignItems: 'center'
 	}
 });
 
@@ -260,6 +276,11 @@ const text = StyleSheet.create({
 		fontSize: 30,
 		paddingHorizontal: 50,
 		paddingVertical: 30,
+	},
+	gameOver: {
+		padding: 50,
+		fontSize: 50,
+		color: '#fff'
 	}
 });
 
