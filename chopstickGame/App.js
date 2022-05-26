@@ -33,8 +33,10 @@ export default function App() {
 
 	const transfer = (hand) => {
 		if(selFingerCount != 0){
+			let newFinger = fingers;
 			fingers[hand] += selFingerCount;
 			fingers[hand] %= 5;
+			setFingers(newFinger);
 			setState(fingers.join(''));
 			changeTurn();
 			resetRound();
@@ -106,13 +108,11 @@ export default function App() {
 
 	useEffect(() => {
 		state2fingers();
-		if(state.substring(0,2) == '00' || state.substring(2,4) == '00'){
-			alert('Completed');
-		}else{
-			if(turn == 'c'){
-				playComputerTurn();
-			}
+		
+		if(turn == 'c' && state.substring(0,2) != '00' && state.substring(2,4) != '00'){
+			playComputerTurn();
 		}
+
 	}, [state, selHand, distributedStates]);
 
 	const distributedRender = [];
@@ -131,6 +131,7 @@ export default function App() {
 	}
 
 	return (
+		// render game completion 
 		<View style={containers.component}>
 			<View style={[containers.hands, containers.topHand]}>
 				<TouchableOpacity
@@ -138,12 +139,12 @@ export default function App() {
 					onPress={(turn == 'h')? ()=> transfer(0): ()=> console.log('invalid press on 1')}
 					disabled={(fingers[0] == 0)? true: false}
 				>
-					<Text style={text.fingers}>{fingers[0]}</Text>
+				<Text style={text.fingers}>{fingers[0]}</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={(selHand == 1)? [hands.hand, hands.handSelected]: hands.hand}
 					onPress={(turn == 'h')? ()=> transfer(1): ()=> console.log('invalid press on 2')}
-					disabled={(fingers[0] == 0)? true: false}
+					disabled={(fingers[1] == 0)? true: false}
 				>
 					<Text style={text.fingers}>{fingers[1]}</Text>
 				</TouchableOpacity>
@@ -160,14 +161,14 @@ export default function App() {
 				<TouchableOpacity
 					style={(selHand == 2)? [hands.hand, hands.handSelected]: hands.hand}
 					onPress={()=> clicked(2)}
-					disabled={(fingers[0] == 0)? true: false}
+					disabled={(turn == 'c' || (turn == 'h' && selFingerCount == 0 && fingers[2] == 0))? true: false}
 				>
 					<Text style={text.fingers}>{fingers[2]}</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={(selHand == 3)? [hands.hand, hands.handSelected]: hands.hand}
 					onPress={()=> clicked(3)}
-					disabled={(fingers[0] == 0)? true: false}
+					disabled={(turn == 'c' || (turn == 'h' && selFingerCount == 0 && fingers[3] == 0))? true: false}
 				>
 					<Text style={text.fingers}>{fingers[3]}</Text>
 				</TouchableOpacity>
