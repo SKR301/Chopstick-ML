@@ -141,7 +141,7 @@ export default function App() {
 	}
 
 	const gameOver = () => {
-		if(state.substring(0,2) != '00' && state.substring(2,4) != '00'){
+		if(state.substring(0,2) == '00' || state.substring(2,4) == '00'){
 			return (
 				<View style={containers.gameOver}>
 					<Text style={text.gameOver}>GAME OVER</Text>
