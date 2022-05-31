@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, Dimensions } from 'react-native';
 import { stateData100 } from './assets/modelCollection';
-import { stateData10000 } from './assets/modelCollection';
+import { stateData100000 } from './assets/modelCollection';
 import { stateData10000000 } from './assets/modelCollection';
 
 export default function App() {
@@ -95,7 +95,7 @@ export default function App() {
 
 		let optimalState = temp1 + temp2;
 
-		let nextState = sortDict(stateData10000000[optimalState])[0][0];
+		let nextState = sortDict(stateData100000[optimalState])[0][0];
 		temp1 = (swap[0])? nextState.substring(2,4).split('').reverse().join(''): nextState.substring(2,4);
 		temp2 = (swap[1])? nextState.substring(0,2).split('').reverse().join(''): nextState.substring(0,2);
 		let properState = temp1 + temp2;

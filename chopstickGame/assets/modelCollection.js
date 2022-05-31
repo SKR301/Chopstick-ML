@@ -1192,4 +1192,4 @@ const stateData10000000 = {
     '4444': {'4344': 1}
 }
 
-export { stateData100, stateData10000, stateData10000000 };
+export { stateData100, stateData1000, stateData10000, stateData100000, stateData1000000, stateData10000000 };
