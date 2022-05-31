@@ -2,3 +2,4 @@ DONOTCHANGE.json
 __pycache__
 model.py
 output*.*
+.expo
