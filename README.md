@@ -1,5 +1,6 @@
 # Chopstick-ML
-A study on kids game called "Chopstick"
+A study on kids game called "Chopstick" <br>
+*CONCLUSION: RANDOM REINFORCEMENT LEARNING ISN'T THE BEST OPTION FOR THIS GAME!*
 
 ### Studies
 - Generate data:  
@@ -15,8 +16,7 @@ A study on kids game called "Chopstick"
   - Confirmed win: **1111** -> **2111** -> **1130** -> **4011** -> **1131** -> **3211** -> **1141** -> **1011** -> **2110** -> **1030** -> **4010** -> **0040** 
 - Robustness Check
   - **100000** is most robust surprisingly. Still doesn't won. **10000000000** iterations, no help.
-  
-- Conclusion: RANDOM REINFORCEMENT LEARNING ISN'T THE BEST OPTION FOR THIS GAME!
+ 
 
 ## Play game
 <img src="https://user-images.githubusercontent.com/47807051/170525715-e6fa4b81-ad70-4b19-ac70-581e28447345.png" width=30% height=30%>
